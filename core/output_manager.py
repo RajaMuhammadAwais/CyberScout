@@ -73,6 +73,8 @@ class OutputManager:
             self._print_dns_results(module_data)
         elif module_name == 'dorks':
             self._print_dorks_results(module_data)
+        elif module_name == 'ai_dorks':
+            self._print_ai_dorks_results(module_data)
         elif module_name == 'breach':
             self._print_breach_results(module_data)
         elif module_name == 'social':
@@ -145,6 +147,50 @@ class OutputManager:
                 print(f"  • {dork}")
             if len(dorks_executed) > 5:
                 print(f"  ... and {len(dorks_executed) - 5} more")
+    
+    def _print_ai_dorks_results(self, data: Dict[str, Any]):
+        """Print AI-powered Google dorking results."""
+        total_results = data.get('total_results', 0)
+        intelligence_score = data.get('intelligence_score', 0.0)
+        
+        print(f"{Fore.GREEN}AI Intelligence Score: {intelligence_score:.2f}/1.0{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}Total Results Found: {total_results}{Style.RESET_ALL}")
+        
+        # Show AI-generated query categories
+        query_categories = data.get('query_categories', {})
+        if query_categories:
+            print(f"\n{Fore.CYAN}AI Query Categories:{Style.RESET_ALL}")
+            for category, category_data in query_categories.items():
+                results_count = category_data.get('total_results', 0)
+                queries_count = len(category_data.get('queries', []))
+                print(f"  • {category.replace('_', ' ').title()}: {queries_count} queries → {results_count} results")
+        
+        # Show top high-risk results
+        results = data.get('results', [])
+        high_risk_results = [r for r in results if r.get('risk_level') == 'high']
+        
+        if high_risk_results:
+            print(f"\n{Fore.RED}High-Risk Findings ({len(high_risk_results)}):{Style.RESET_ALL}")
+            for result in high_risk_results[:5]:
+                print(f"  • {result.get('title', 'No title')}")
+                print(f"    Risk: {result.get('risk_level', 'unknown').upper()} | Score: {result.get('composite_score', 0):.2f}")
+                print(f"    URL: {result.get('url', 'No URL')}")
+                indicators = result.get('intelligence_indicators', [])
+                if indicators:
+                    print(f"    Indicators: {', '.join(indicators[:3])}")
+                print()
+        
+        # Show intelligence indicators summary
+        all_indicators = []
+        for result in results:
+            all_indicators.extend(result.get('intelligence_indicators', []))
+        
+        if all_indicators:
+            from collections import Counter
+            top_indicators = Counter(all_indicators).most_common(5)
+            print(f"\n{Fore.YELLOW}Top Intelligence Indicators:{Style.RESET_ALL}")
+            for indicator, count in top_indicators:
+                print(f"  • {indicator.replace('_', ' ').title()}: {count} occurrences")
     
     def _print_breach_results(self, data: Dict[str, Any]):
         """Print breach checking results."""
@@ -297,6 +343,8 @@ class OutputManager:
                     self._write_dns_csv(writer, module_data, timestamp)
                 elif module_name == 'dorks':
                     self._write_dorks_csv(writer, module_data, timestamp)
+                elif module_name == 'ai_dorks':
+                    self._write_ai_dorks_csv(writer, module_data, timestamp)
                 elif module_name == 'breach':
                     self._write_breach_csv(writer, module_data, timestamp)
                 elif module_name == 'social':
@@ -390,6 +438,27 @@ class OutputManager:
             relevance = mention.get('relevance_score', 0)
             
             writer.writerow(['social', f'{platform}_mention', url, f'relevance:{relevance}', timestamp])
+    
+    def _write_ai_dorks_csv(self, writer, data: Dict[str, Any], timestamp: str):
+        """Write AI-powered Google dorking results to CSV."""
+        for result in data.get('results', []):
+            title = result.get('title', '')
+            url = result.get('url', '')
+            risk_level = result.get('risk_level', 'unknown')
+            composite_score = result.get('composite_score', 0)
+            intelligence_indicators = ', '.join(result.get('intelligence_indicators', []))
+            
+            details = json.dumps({
+                'risk_level': risk_level,
+                'composite_score': composite_score,
+                'relevance_score': result.get('relevance_score', 0),
+                'sensitivity_score': result.get('sensitivity_score', 0),
+                'intelligence_indicators': intelligence_indicators,
+                'intent_category': result.get('intent_category', ''),
+                'ai_rank': result.get('ai_rank', 0)
+            })
+            
+            writer.writerow(['ai_dorks', 'search_result', title, details, timestamp])
     
     def _write_email_csv(self, writer, data: Dict[str, Any], timestamp: str):
         """Write email results to CSV."""

@@ -12,6 +12,7 @@ from modules.dns_enum import DNSEnumerator
 from modules.google_dorker import GoogleDorker
 from modules.breach_checker import BreachChecker
 from modules.social_scraper import SocialScraper
+from modules.ai_dorker import AIDorker
 from core.rate_limiter import RateLimiter
 from utils.validators import validate_target, get_target_type
 from config import Config
@@ -69,6 +70,10 @@ class ReconOrchestrator:
         if 'dorks' in modules:
             task = asyncio.create_task(self._execute_dorks_module(target, target_type))
             tasks.append(('dorks', task))
+        
+        if 'ai_dorks' in modules:
+            task = asyncio.create_task(self._execute_ai_dorks_module(target, target_type))
+            tasks.append(('ai_dorks', task))
         
         if 'breach' in modules:
             task = asyncio.create_task(self._execute_breach_module(target, target_type))
@@ -135,6 +140,13 @@ class ReconOrchestrator:
         
         async with GoogleDorker(self.rate_limiter) as dorker:
             return await dorker.execute_dorks(target, target_type)
+    
+    async def _execute_ai_dorks_module(self, target: str, target_type: str) -> Dict[str, Any]:
+        """Execute AI-powered Google dorking module."""
+        logger.debug("Executing AI-powered Google dorking module")
+        
+        async with AIDorker(self.rate_limiter) as ai_dorker:
+            return await ai_dorker.execute_ai_dorking(target, target_type)
     
     async def _execute_breach_module(self, target: str, target_type: str) -> Dict[str, Any]:
         """Execute breach checking module."""
@@ -233,6 +245,8 @@ class ReconOrchestrator:
                     total_findings += len(module_results.get('records', {}))
                     total_findings += len(module_results.get('subdomains', []))
                 elif module_name == 'dorks':
+                    total_findings += module_results.get('total_results', 0)
+                elif module_name == 'ai_dorks':
                     total_findings += module_results.get('total_results', 0)
                 elif module_name == 'breach':
                     if 'total_breaches' in module_results:

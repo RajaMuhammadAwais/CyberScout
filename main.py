@@ -59,6 +59,12 @@ Examples:
     )
     
     parser.add_argument(
+        '--ai-dorks',
+        action='store_true',
+        help='Execute AI-powered intelligent Google dorking'
+    )
+    
+    parser.add_argument(
         '--social',
         action='store_true',
         help='Scrape social media for target information'
@@ -152,7 +158,7 @@ def validate_arguments(args: argparse.Namespace) -> bool:
     
     # Check if at least one module is selected
     modules_selected = any([
-        args.dns, args.emails, args.dorks, 
+        args.dns, args.emails, args.dorks, getattr(args, 'ai_dorks', False),
         args.social, args.breach, args.all
     ])
     
@@ -186,7 +192,7 @@ async def run_reconnaissance(args: argparse.Namespace) -> Dict[str, Any]:
     # Determine which modules to run
     modules_to_run = []
     if args.all:
-        modules_to_run = ['dns', 'emails', 'dorks', 'social', 'breach']
+        modules_to_run = ['dns', 'emails', 'dorks', 'ai_dorks', 'social', 'breach']
     else:
         if args.dns:
             modules_to_run.append('dns')
@@ -194,6 +200,8 @@ async def run_reconnaissance(args: argparse.Namespace) -> Dict[str, Any]:
             modules_to_run.append('emails')
         if args.dorks:
             modules_to_run.append('dorks')
+        if getattr(args, 'ai_dorks', False):
+            modules_to_run.append('ai_dorks')
         if args.social:
             modules_to_run.append('social')
         if args.breach:
