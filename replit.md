@@ -4,7 +4,9 @@
 
 This is a high-performance automated OSINT (Open Source Intelligence) reconnaissance tool designed for cybersecurity professionals, threat hunters, red teamers, and bug bounty researchers. The tool automates the collection of publicly available intelligence across multiple vectors including DNS enumeration, breach checking, Google dorking, and social media reconnaissance.
 
-The tool is built with a Python-based web interface and CLI, featuring async/concurrent processing for maximum performance. It aims to rival existing industry tools like SpiderFoot, Recon-ng, theHarvester, and Amass while addressing their limitations through better concurrency, modularity, and user experience.
+The tool is built with a Python-based web interface and CLI, featuring async/concurrent processing for maximum performance. It rivals existing industry tools like SpiderFoot, Recon-ng, theHarvester, and Amass while addressing their limitations through better concurrency, modularity, and user experience.
+
+**Current Status**: Fully functional with both CLI and web interfaces deployed and tested. The tool successfully performs multi-vector reconnaissance with real-time monitoring capabilities.
 
 ## System Architecture
 
@@ -96,10 +98,19 @@ The tool is built with a Python-based web interface and CLI, featuring async/con
 - **API Integration**: Optional API keys for enhanced functionality
 - **Performance Tuning**: Configurable timeouts, rate limits, and concurrency settings
 
-## Changelog
+## Recent Changes
 
-Changelog:
-- June 24, 2025. Initial setup
+- June 24, 2025: Complete OSINT reconnaissance tool implementation
+  - CLI interface with chainable reconnaissance modules (--dns --dorks --breach --social --emails)
+  - Web interface with real-time task monitoring and result visualization
+  - DNS enumeration with concurrent A, MX, NS, TXT record lookups and subdomain discovery
+  - Google dorking module with advanced search patterns and relevance scoring
+  - Breach checking integration with Have I Been Pwned API
+  - Social media reconnaissance across GitHub, Twitter, LinkedIn, Reddit
+  - Rate limiting and ethical scraping controls
+  - Multiple output formats (JSON, CSV, terminal) with download capabilities
+  - Comprehensive documentation with README, installation guide, and CLI demo script
+  - MIT license added for open source distribution
 
 ## User Preferences
 
