@@ -218,9 +218,11 @@ async def run_reconnaissance(args: argparse.Namespace) -> Dict[str, Any]:
 def start_web_interface():
     """Start the web interface."""
     from web_interface import app
+    
+    config = Config()
     print("Starting OSINT Reconnaissance Tool Web Interface...")
-    print("Access at: http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    print(f"Access at: http://localhost:{config.web_port}")
+    app.run(host=config.web_host, port=config.web_port, debug=config.debug)
 
 async def main():
     """Main entry point."""

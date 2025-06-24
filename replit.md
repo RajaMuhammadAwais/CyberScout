@@ -100,17 +100,19 @@ The tool is built with a Python-based web interface and CLI, featuring async/con
 
 ## Recent Changes
 
-- June 24, 2025: Complete OSINT reconnaissance tool implementation
-  - CLI interface with chainable reconnaissance modules (--dns --dorks --breach --social --emails)
-  - Web interface with real-time task monitoring and result visualization
-  - DNS enumeration with concurrent A, MX, NS, TXT record lookups and subdomain discovery
-  - Google dorking module with advanced search patterns and relevance scoring
-  - Breach checking integration with Have I Been Pwned API
-  - Social media reconnaissance across GitHub, Twitter, LinkedIn, Reddit
-  - Rate limiting and ethical scraping controls
+- June 24, 2025: Complete OSINT reconnaissance tool implementation with AI capabilities
+  - CLI interface with chainable reconnaissance modules (--dns --dorks --ai-dorks --breach --social --emails)
+  - AI-powered Google dorking module using machine learning for intelligent query generation
+  - TextBlob NLP integration for semantic analysis and context-aware search patterns
+  - Dynamic risk assessment and relevance scoring without requiring databases
+  - Scikit-learn integration for advanced query prioritization and result ranking
+  - Web interface with real-time task monitoring and AI dorking option
+  - Environment configuration system with .env file support for API keys and settings
+  - DNS enumeration with concurrent record lookups and subdomain discovery
+  - Breach checking integration and social media reconnaissance capabilities
+  - Rate limiting and ethical scraping controls with configurable performance settings
   - Multiple output formats (JSON, CSV, terminal) with download capabilities
-  - Comprehensive documentation with README, installation guide, and CLI demo script
-  - MIT license added for open source distribution
+  - Comprehensive documentation, installation automation, and demo scripts
 
 ## User Preferences
 

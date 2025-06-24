@@ -10,7 +10,7 @@ chmod +x setup.sh && ./setup.sh
 
 ### 1. Install Python Dependencies
 ```bash
-pip install aiohttp beautifulsoup4 dnspython flask werkzeug colorama
+pip install aiohttp beautifulsoup4 dnspython flask werkzeug colorama scikit-learn numpy textblob
 ```
 
 ### 2. Start the Tool

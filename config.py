@@ -40,6 +40,22 @@ class Config:
         self.twitter_bearer_token = os.getenv('TWITTER_BEARER_TOKEN', '')
         self.linkedin_session = os.getenv('LINKEDIN_SESSION', '')
         
+        # Load other configuration from environment
+        self.rate_limit = float(os.getenv('RATE_LIMIT', self.rate_limit))
+        self.timeout = int(os.getenv('TIMEOUT', self.timeout))
+        self.max_concurrent = int(os.getenv('MAX_CONCURRENT', self.max_concurrent))
+        self.verbose = os.getenv('VERBOSE', '').lower() in ('true', '1', 'yes')
+        self.output_dir = os.getenv('OUTPUT_DIR', self.output_dir)
+        self.ethical_mode = os.getenv('ETHICAL_MODE', 'true').lower() in ('true', '1', 'yes')
+        self.web_host = os.getenv('WEB_HOST', self.web_host)
+        self.web_port = int(os.getenv('WEB_PORT', self.web_port))
+        self.debug = os.getenv('DEBUG', '').lower() in ('true', '1', 'yes')
+        
+        # Load DNS servers from environment
+        dns_env = os.getenv('DNS_SERVERS', '8.8.8.8,1.1.1.1,208.67.222.222,9.9.9.9')
+        if dns_env:
+            self.dns_servers = [server.strip() for server in dns_env.split(',')]
+        
         # Set default DNS servers
         if self.dns_servers is None:
             self.dns_servers = [

@@ -342,13 +342,7 @@ def internal_error(error):
     return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
-    print("🌐 Starting OSINT Reconnaissance Tool Web Interface")
-    print("📊 Access the interface at: http://localhost:5000")
-    print("🔍 API Documentation available at: http://localhost:5000/api/system_info")
-    
-    app.run(
-        host='0.0.0.0',
-        port=5000,
-        debug=False,
-        threaded=True
-    )
+    config = Config()
+    print("Starting OSINT Reconnaissance Tool Web Interface...")
+    print(f"Access at: http://localhost:{config.web_port}")
+    app.run(host=config.web_host, port=config.web_port, debug=config.debug)
