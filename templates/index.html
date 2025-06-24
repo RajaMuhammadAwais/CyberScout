@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Reconnaissance Tool</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-search me-2"></i>OSINT Reconnaissance Tool
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#main-form">
+                            <i class="fas fa-play me-1"></i>New Scan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#active-tasks">
+                            <i class="fas fa-tasks me-1"></i>Active Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#results">
+                            <i class="fas fa-chart-bar me-1"></i>Results
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h1 class="card-title">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            Advanced OSINT Reconnaissance
+                        </h1>
+                        <p class="card-text lead">
+                            Automated multi-vector reconnaissance for cybersecurity professionals
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Main Form -->
+        <div class="row mb-4" id="main-form">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-crosshairs me-2"></i>Target Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="reconnaissance-form">
+                            <!-- Target Input -->
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <label for="target" class="form-label">Target</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-bullseye"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="target" name="target" 
+                                               placeholder="example.com, user@domain.com, username, or IP address" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="validate-target">
+                                            <i class="fas fa-check"></i> Validate
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        Enter a domain, email address, username, or IP address for reconnaissance
+                                    </div>
+                                    <div id="target-validation" class="mt-2"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Target Type</label>
+                                    <div class="form-control-plaintext" id="target-type">
+                                        <span class="badge bg-secondary">Unknown</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Module Selection -->
+                            <div class="mb-3">
+                                <label class="form-label">Reconnaissance Modules</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="dns" id="module-dns">
+                                            <label class="form-check-label" for="module-dns">
+                                                <i class="fas fa-server text-primary me-2"></i>
+                                                <strong>DNS Enumeration</strong>
+                                                <br><small class="text-muted">A, MX, NS, TXT records and subdomains</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="dorks" id="module-dorks">
+                                            <label class="form-check-label" for="module-dorks">
+                                                <i class="fab fa-google text-danger me-2"></i>
+                                                <strong>Google Dorking</strong>
+                                                <br><small class="text-muted">Advanced search queries for intelligence</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="breach" id="module-breach">
+                                            <label class="form-check-label" for="module-breach">
+                                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                                <strong>Breach Checking</strong>
+                                                <br><small class="text-muted">Data breaches and exposed credentials</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="social" id="module-social">
+                                            <label class="form-check-label" for="module-social">
+                                                <i class="fas fa-users text-info me-2"></i>
+                                                <strong>Social Media</strong>
+                                                <br><small class="text-muted">Profile discovery across platforms</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="emails" id="module-emails">
+                                            <label class="form-check-label" for="module-emails">
+                                                <i class="fas fa-envelope text-success me-2"></i>
+                                                <strong>Email Enumeration</strong>
+                                                <br><small class="text-muted">Email address discovery and validation</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="select-all-modules">
+                                            <label class="form-check-label" for="select-all-modules">
+                                                <i class="fas fa-check-double text-dark me-2"></i>
+                                                <strong>Select All Modules</strong>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Advanced Options -->
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">
+                                        <button class="btn btn-link text-decoration-none p-0" type="button" 
+                                                data-bs-toggle="collapse" data-bs-target="#advanced-options">
+                                            <i class="fas fa-cog me-2"></i>Advanced Options
+                                            <i class="fas fa-chevron-down ms-2"></i>
+                                        </button>
+                                    </h6>
+                                </div>
+                                <div class="collapse" id="advanced-options">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="rate-limit" class="form-label">Rate Limit (seconds)</label>
+                                                <input type="number" class="form-control" id="rate-limit" 
+                                                       name="rate_limit" value="1.0" step="0.1" min="0.1" max="10">
+                                                <div class="form-text">Delay between requests</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="timeout" class="form-label">Timeout (seconds)</label>
+                                                <input type="number" class="form-control" id="timeout" 
+                                                       name="timeout" value="30" min="5" max="120">
+                                                <div class="form-text">Request timeout</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="max-concurrent" class="form-label">Max Concurrent</label>
+                                                <input type="number" class="form-control" id="max-concurrent" 
+                                                       name="max_concurrent" value="10" min="1" max="50">
+                                                <div class="form-text">Concurrent requests limit</div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="verbose">
+                                                    <label class="form-check-label" for="verbose">
+                                                        Enable verbose logging
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" id="start-reconnaissance">
+                                    <i class="fas fa-play me-2"></i>Start Reconnaissance
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Tasks -->
+        <div class="row mb-4" id="active-tasks">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3><i class="fas fa-tasks me-2"></i>Active Tasks</h3>
+                        <button class="btn btn-outline-primary btn-sm" id="refresh-tasks">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="tasks-container">
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-2x mb-2"></i>
+                                <p>No active tasks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="row mb-4" id="results">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar me-2"></i>Results</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="results-container">
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-search fa-2x mb-2"></i>
+                                <p>No results to display</p>
+                                <small>Complete a reconnaissance scan to see results here</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>OSINT Reconnaissance Tool</h5>
+                    <p class="mb-0">Advanced automated reconnaissance for cybersecurity professionals</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Ethical use only • Respect rate limits • Follow ToS
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
