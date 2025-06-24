@@ -1,0 +1,78 @@
+# === Python artifacts ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# === Byte-compiled and cache ===
+*.log
+*.tmp
+*.swp
+*.bak
+*.db
+*.sqlite3
+
+# === Virtual environments ===
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# === Tools and editors ===
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Dependency/lock files ===
+poetry.lock
+Pipfile.lock
+uv.lock
+
+# === Build and packaging ===
+build/
+dist/
+*.spec
+
+# === Project-specific exclusions ===
+# Avoid committing large or generated assets
+attached_assets/
+output_manager.py  # Optional: if auto-generated
+run_cli_demo.sh    # Optional: if only used locally
+
+# === Replit and other cloud IDEs ===
+replit.md
+
+# === GitHub workflows (optional to ignore) ===
+# .github/
+
+# === Coverage and testing ===
+coverage/
+htmlcov/
+.pytest_cache/
+.cache/
+nosetests.xml
+coverage.xml
+test-results/
+junit*.xml
+
+# === Static files and temporary outputs ===
+output/
+*.out
+*.result
+
+# === Others ===
+*.bak
+*.orig
+*.rej
