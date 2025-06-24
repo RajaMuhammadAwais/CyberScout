@@ -18,6 +18,7 @@ import numpy as np
 
 from core.rate_limiter import RateLimiter
 from config import USER_AGENTS
+from .enhanced_analyzer import EnhancedResultAnalyzer
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,9 @@ class AIDorker:
         self.rate_limiter = rate_limiter
         self.session = None
         self.vectorizer = TfidfVectorizer(max_features=1000, stop_words='english')
+        
+        # Initialize enhanced result analyzer
+        self.enhanced_analyzer = EnhancedResultAnalyzer()
         
         # Dynamic dork patterns based on target analysis
         self.base_patterns = {
@@ -111,7 +115,7 @@ class AIDorker:
         }
         
         try:
-            # Analyze target to generate intelligent queries
+            # Generate intelligent queries with enhanced AI
             intelligent_queries = await self._generate_intelligent_queries(target, target_type)
             results['ai_generated_queries'] = intelligent_queries
             
@@ -128,10 +132,16 @@ class AIDorker:
                         
                         if search_results:
                             # Analyze and score results using AI
-                            scored_results = await self._analyze_results_with_ai(
-                                search_results, target, query_info['intent']
+                            analyzed_results = await self._analyze_results_with_ai(
+                                search_results, target, query_info.get('intent', category)
                             )
-                            category_results.extend(scored_results)
+                            
+                            # Enhanced ML analysis
+                            enhanced_results = self.enhanced_analyzer.analyze_results_enhanced(
+                                analyzed_results, target
+                            )
+                            
+                            category_results.extend(enhanced_results)
                             
                         query_info['results_count'] = len(search_results)
                         
@@ -147,11 +157,11 @@ class AIDorker:
                 }
                 results['results'].extend(category_results)
             
-            # Calculate overall intelligence score
-            results['intelligence_score'] = self._calculate_intelligence_score(results)
+            # Calculate enhanced intelligence score
+            results['intelligence_score'] = self._calculate_enhanced_intelligence_score(results)
             results['total_results'] = len(results['results'])
             
-            # Rank results by relevance and risk
+            # Rank results by AI
             results['results'] = self._rank_results_by_ai(results['results'], target)
             
         except Exception as e:
@@ -668,3 +678,85 @@ class AIDorker:
             result['composite_score'] = calculate_composite_score(result)
         
         return ranked_results
+    
+    def _calculate_enhanced_intelligence_score(self, results: Dict[str, Any]) -> float:
+        """Calculate enhanced intelligence score using ML insights."""
+        if not results['results']:
+            return 0.0
+        
+        # Base score from traditional calculation
+        base_score = self._calculate_intelligence_score(results)
+        
+        # Enhanced ML scoring
+        if not results['results']:
+            return base_score
+        
+        # ML confidence enhancement
+        ml_confidences = [r.get('ml_confidence', 0.5) for r in results['results']]
+        ml_scores = [r.get('composite_ml_score', 0.5) for r in results['results']]
+        security_scores = [r.get('security_risk_score', 0.0) for r in results['results']]
+        
+        if ml_confidences:
+            avg_ml_confidence = np.mean(ml_confidences)
+            avg_ml_score = np.mean(ml_scores)
+            avg_security_score = np.mean(security_scores)
+            
+            # Enhanced multiplier based on ML analysis
+            ml_multiplier = 1.0 + (avg_ml_confidence * 0.3) + (avg_ml_score * 0.2) + (avg_security_score * 0.25)
+            
+            # Result diversity bonus
+            risk_categories = [r.get('ml_risk_category', 'low') for r in results['results']]
+            unique_risk_categories = len(set(risk_categories))
+            diversity_bonus = min(unique_risk_categories * 0.05, 0.15)
+            
+            enhanced_score = base_score * (ml_multiplier + diversity_bonus)
+            return min(enhanced_score, 1.0)
+        
+        return base_score
+    
+    def _rank_results_by_ai_enhanced(self, results: List[Dict[str, Any]], target: str) -> List[Dict[str, Any]]:
+        """Enhanced AI ranking with ML insights."""
+        def calculate_enhanced_composite_score(result):
+            # Traditional scores
+            relevance = result.get('relevance_score', 0)
+            sensitivity = result.get('sensitivity_score', 0)
+            
+            # Enhanced ML scores
+            ml_relevance = result.get('ml_relevance_score', relevance)
+            security_risk = result.get('security_risk_score', 0)
+            ml_confidence = result.get('ml_confidence', 0.5)
+            composite_ml = result.get('composite_ml_score', 0.5)
+            
+            # Risk category weighting
+            risk_weights = {
+                'critical': 1.5,
+                'high': 1.3,
+                'medium': 1.1,
+                'low': 1.0
+            }
+            risk_weight = risk_weights.get(result.get('ml_risk_category', 'low'), 1.0)
+            
+            # Intelligence indicators
+            indicators = result.get('ml_intelligence_indicators', [])
+            indicator_bonus = min(len(indicators) * 0.02, 0.1)
+            
+            # Final composite calculation
+            enhanced_score = (
+                ml_relevance * 0.25 +
+                security_risk * 0.3 +
+                ml_confidence * 0.2 +
+                composite_ml * 0.15 +
+                sensitivity * 0.1
+            ) * risk_weight + indicator_bonus
+            
+            return enhanced_score
+        
+        # Sort by enhanced score
+        enhanced_ranked = sorted(results, key=calculate_enhanced_composite_score, reverse=True)
+        
+        # Add enhanced ranking info
+        for i, result in enumerate(enhanced_ranked):
+            result['ai_enhanced_rank'] = i + 1
+            result['enhanced_composite_score'] = calculate_enhanced_composite_score(result)
+        
+        return enhanced_ranked

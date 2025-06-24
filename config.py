@@ -26,6 +26,13 @@ class Config:
     twitter_bearer_token: str = None
     linkedin_session: str = None
     
+    # Additional configuration options
+    output_dir: str = './results'
+    ethical_mode: bool = True
+    web_host: str = '0.0.0.0'
+    web_port: int = 5000
+    debug: bool = False
+    
     # DNS settings
     dns_servers: List[str] = None
     

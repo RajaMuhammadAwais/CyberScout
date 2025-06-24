@@ -184,6 +184,7 @@ class OutputManager:
         all_indicators = []
         for result in results:
             all_indicators.extend(result.get('intelligence_indicators', []))
+            all_indicators.extend(result.get('ml_intelligence_indicators', []))
         
         if all_indicators:
             from collections import Counter
@@ -191,6 +192,20 @@ class OutputManager:
             print(f"\n{Fore.YELLOW}Top Intelligence Indicators:{Style.RESET_ALL}")
             for indicator, count in top_indicators:
                 print(f"  • {indicator.replace('_', ' ').title()}: {count} occurrences")
+        
+        # Show ML analysis summary
+        ml_confidences = [r.get('ml_confidence', 0) for r in results if r.get('ml_confidence', 0) > 0]
+        if ml_confidences:
+            avg_ml_confidence = sum(ml_confidences) / len(ml_confidences)
+            print(f"\n{Fore.CYAN}ML Analysis Summary:{Style.RESET_ALL}")
+            print(f"  • Average ML Confidence: {avg_ml_confidence:.2f}")
+            
+            risk_categories = [r.get('ml_risk_category', 'unknown') for r in results]
+            risk_counts = Counter(risk_categories)
+            for risk, count in risk_counts.most_common():
+                if risk != 'unknown':
+                    color = Fore.RED if risk == 'critical' else Fore.YELLOW if risk == 'high' else Fore.GREEN
+                    print(f"  • {color}{risk.title()} Risk Results: {count}{Style.RESET_ALL}")
     
     def _print_breach_results(self, data: Dict[str, Any]):
         """Print breach checking results."""

@@ -100,19 +100,20 @@ The tool is built with a Python-based web interface and CLI, featuring async/con
 
 ## Recent Changes
 
-- June 24, 2025: Complete OSINT reconnaissance tool implementation with AI capabilities
-  - CLI interface with chainable reconnaissance modules (--dns --dorks --ai-dorks --breach --social --emails)
-  - AI-powered Google dorking module using machine learning for intelligent query generation
-  - TextBlob NLP integration for semantic analysis and context-aware search patterns
-  - Dynamic risk assessment and relevance scoring without requiring databases
-  - Scikit-learn integration for advanced query prioritization and result ranking
-  - Web interface with real-time task monitoring and AI dorking option
-  - Environment configuration system with .env file support for API keys and settings
-  - DNS enumeration with concurrent record lookups and subdomain discovery
-  - Breach checking integration and social media reconnaissance capabilities
-  - Rate limiting and ethical scraping controls with configurable performance settings
-  - Multiple output formats (JSON, CSV, terminal) with download capabilities
-  - Comprehensive documentation, installation automation, and demo scripts
+- June 24, 2025: Complete OSINT reconnaissance tool with advanced AI/ML capabilities
+  - Advanced ML algorithms integrated: TF-IDF, K-means clustering, isolation forest, random forest
+  - Enhanced result analyzer with multi-dimensional scoring (relevance, security, anomaly detection)
+  - Intelligent query generation using NLP and semantic analysis
+  - Risk categorization system (critical/high/medium/low) with ML confidence scoring
+  - Technology stack detection and vulnerability likelihood assessment
+  - Anomaly detection for identifying unusual and potentially interesting results
+  - Sentiment analysis and context-aware pattern recognition
+  - Security indicator scoring with 50+ threat patterns and file risk assessment
+  - ML-powered result clustering and ranking with composite scoring algorithms
+  - CLI interface with AI-powered dorking (--ai-dorks) alongside traditional modules
+  - Web interface with real-time ML analysis and enhanced intelligence scoring
+  - Environment configuration system with performance tuning options
+  - Comprehensive documentation and automated setup with ML dependencies
 
 ## User Preferences
 
