@@ -1,4 +1,32 @@
-# === Python artifacts ===
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+venv/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results/output
+results/
+*.log
+*.tmp
+*.bak
+
+# Security
+secrets.json# === Python artifacts ===
 __pycache__/
 *.py[cod]
 *.pyo

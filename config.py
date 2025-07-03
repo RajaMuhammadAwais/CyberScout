@@ -21,6 +21,9 @@ class Config:
     # API configurations
     google_api_key: str = None
     hibp_api_key: str = None
+    leaklookup_api_key: str = None
+    deepseek_api_key: str = None
+    deepseek_api_key: str = None
     
     # Social media configurations
     twitter_bearer_token: str = None
@@ -44,6 +47,9 @@ class Config:
         # Load API keys from environment
         self.google_api_key = os.getenv('GOOGLE_API_KEY', '')
         self.hibp_api_key = os.getenv('HIBP_API_KEY', '')
+        self.leaklookup_api_key = os.getenv('LEAKLOOKUP_API_KEY', '')
+        self.deepseek_api_key = os.getenv('DEEPSEEK_API_KEY', '')
+        self.deepseek_api_key = os.getenv('DEEPSEEK_API_KEY', '')
         self.twitter_bearer_token = os.getenv('TWITTER_BEARER_TOKEN', '')
         self.linkedin_session = os.getenv('LINKEDIN_SESSION', '')
         

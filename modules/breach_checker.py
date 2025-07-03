@@ -21,10 +21,39 @@ class BreachChecker:
     def __init__(self, rate_limiter: RateLimiter):
         self.rate_limiter = rate_limiter
         self.session = None
-        
         # API endpoints
         self.hibp_api_base = "https://haveibeenpwned.com/api/v3"
         self.pwnedpasswords_api = "https://api.pwnedpasswords.com"
+        self.leaklookup_api_base = "https://leak-lookup.com/api"
+        self.leaklookup_api_key = config.leaklookup_api_key
+    async def check_leaklookup_email(self, email: str) -> Dict[str, Any]:
+        """Check Leak-Lookup API for email breaches (if API key is set)."""
+        results = {
+            'email': email,
+            'leaklookup_results': [],
+            'errors': []
+        }
+        if not self.leaklookup_api_key:
+            results['errors'].append('Leak-Lookup API key not set.')
+            return results
+        await self.rate_limiter.wait('breach')
+        url = f"{self.leaklookup_api_base}/search"
+        headers = {
+            'Authorization': self.leaklookup_api_key,
+            'Content-Type': 'application/json',
+            'User-Agent': 'OSINT-Reconnaissance-Tool'
+        }
+        payload = {"type": "email", "query": email}
+        try:
+            async with self.session.post(url, headers=headers, json=payload) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    results['leaklookup_results'] = data
+                else:
+                    results['errors'].append(f"Leak-Lookup API returned status {response.status}")
+        except Exception as e:
+            results['errors'].append(f"Leak-Lookup API error: {str(e)}")
+        return results
         
     async def __aenter__(self):
         """Async context manager entry."""

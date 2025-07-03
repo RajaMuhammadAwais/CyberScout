@@ -1,3 +1,82 @@
+def threat_score_cli():
+    parser = argparse.ArgumentParser(description='DeepSeek AI-powered threat scoring CLI')
+    parser.add_argument('--threat-score', type=str, help='Task ID to get AI threat score')
+    args, unknown = parser.parse_known_args()
+    if args.threat_score:
+        from core.output_manager import OutputManager
+        from web_interface import active_tasks, task_results
+        task_id = args.threat_score
+        task = active_tasks.get(task_id)
+        if not task:
+            print(f"[Error] Task {task_id} not found.")
+            exit(1)
+        if task.status != 'completed':
+            print(f"[Error] Task {task_id} not completed yet.")
+            exit(1)
+        results = task_results.get(task_id)
+        if not results:
+            print(f"[Error] Results for task {task_id} not found.")
+            exit(1)
+        prompt = (
+            f"Analyze the following OSINT reconnaissance results for target '{task.target}'. "
+            f"Assign a risk/threat score from 1 (low) to 10 (critical) and provide a short justification.\nResults: {results}"
+        )
+        try:
+            ai_response = deepseek_complete(prompt, max_tokens=256)
+            print("\n[DeepSeek AI Threat Score]\n" + ai_response)
+        except Exception as e:
+            print(f"[DeepSeek AI Error] {e}")
+        exit(0)
+if __name__ == '__main__':
+    threat_score_cli()
+    # ...existing code...
+from utils.deepseek import deepseek_complete
+import argparse
+def summarize_task_cli():
+    parser = argparse.ArgumentParser(description='DeepSeek AI-powered task summary CLI')
+    parser.add_argument('--summarize-task', type=str, help='Task ID to summarize with DeepSeek AI')
+    args, unknown = parser.parse_known_args()
+    if args.summarize_task:
+        from core.output_manager import OutputManager
+        from web_interface import active_tasks, task_results
+        task_id = args.summarize_task
+        task = active_tasks.get(task_id)
+        if not task:
+            print(f"[Error] Task {task_id} not found.")
+            exit(1)
+        if task.status != 'completed':
+            print(f"[Error] Task {task_id} not completed yet.")
+            exit(1)
+        results = task_results.get(task_id)
+        if not results:
+            print(f"[Error] Results for task {task_id} not found.")
+            exit(1)
+        prompt = f"Summarize the following OSINT reconnaissance results for target '{task.target}'. Highlight key findings, risks, and recommended actions.\nResults: {results}"
+        try:
+            summary = deepseek_complete(prompt, max_tokens=512)
+            print("\n[DeepSeek AI Summary]\n" + summary)
+        except Exception as e:
+            print(f"[DeepSeek AI Error] {e}")
+        exit(0)
+if __name__ == '__main__':
+    summarize_task_cli()
+    # ...existing code...
+from utils.deepseek import deepseek_complete
+import argparse
+def deepseek_enrich_cli():
+    parser = argparse.ArgumentParser(description='DeepSeek AI enrichment CLI')
+    parser.add_argument('--deepseek-enrich', type=str, help='Text to enrich/summarize with DeepSeek AI')
+    args, unknown = parser.parse_known_args()
+    if args.deepseek_enrich:
+        try:
+            result = deepseek_complete(args.deepseek_enrich)
+            print("\n[DeepSeek AI Result]\n" + result)
+        except Exception as e:
+            print(f"[DeepSeek AI Error] {e}")
+        exit(0)
+if __name__ == '__main__':
+    deepseek_enrich_cli()
+    # ...existing code...
 #!/usr/bin/env python3
 """
 OSINT Reconnaissance Tool
