@@ -7,36 +7,36 @@ name: CI
 
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Run CLI smoke test
-      run: |
-        python main.py --target example.com --dns --output json
+      - name: Run CLI smoke test
+        run: |
+          python main.py --target example.com --dns --output json
 
-    - name: Run web interface smoke test
-      run: |
-        python main.py --web &
-        sleep 10
-        curl -f http://localhost:5000 || (echo "Web UI failed to start" && exit 1)
-        curl -f http://localhost:5000 || (echo "Web UI failed to start" && exit 1)
+      - name: Run web interface smoke test
+        run: |
+          python main.py --web &
+          sleep 10
+          curl -f http://localhost:5000 || (echo "Web UI failed to start" && exit 1)
+
+
 
 
 
