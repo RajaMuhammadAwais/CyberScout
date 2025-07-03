@@ -1,8 +1,10 @@
+
 # OSINT Reconnaissance Tool
 
 A high-performance automated OSINT (Open Source Intelligence) reconnaissance tool designed for cybersecurity professionals, threat hunters, red teamers, and bug bounty researchers. This tool automates the collection of publicly available intelligence across multiple vectors including DNS enumeration, breach checking, Google dorking, and social media reconnaissance.
 
 ## Features
+
 
 ### 🚀 Core Capabilities
 - **Multi-Vector Reconnaissance**: DNS, Google dorking, breach checking, social media, and email enumeration
@@ -11,13 +13,26 @@ A high-performance automated OSINT (Open Source Intelligence) reconnaissance too
 - **Rate Limiting**: Built-in ethical scraping controls
 - **Multiple Output Formats**: JSON, CSV, and formatted terminal output
 - **Real-time Monitoring**: Web interface with live task tracking
+- **AI-Powered Enrichment**: DeepSeek integration for report summarization, threat scoring, and enrichment (web & CLI)
 
 ### 🔍 Reconnaissance Modules
 - **DNS Enumeration**: A, MX, NS, TXT records, subdomain discovery, reverse DNS
 - **Google Dorking**: Advanced search queries with relevance scoring
-- **Breach Checking**: Integration with Have I Been Pwned API
+- **Breach Checking**: Integration with Have I Been Pwned API and Leak-Lookup API
 - **Social Media**: Profile discovery across GitHub, Twitter, LinkedIn, Reddit
 - **Email Enumeration**: Email discovery and validation techniques
+- **AI Enrichment**: DeepSeek-powered summarization, threat scoring, and advice
+### 🔒 Security Best Practices
+- `.env` and sensitive files are excluded from git via `.gitignore`.
+- API keys and secrets are never hardcoded—use environment variables only.
+- Rate limiting and ethical mode are enforced by default.
+### 🤖 AI Features (DeepSeek)
+- **/api/summary/<task_id>**: Get an AI-generated summary of any completed task (web & CLI)
+- **/api/threat_score/<task_id>**: Get an AI-generated risk/threat score and justification (web & CLI)
+- **/api/deepseek_enrich**: General AI enrichment/summarization endpoint (web)
+- **--summarize-task <task_id>**: CLI option for AI summary
+- **--threat-score <task_id>**: CLI option for AI threat scoring
+- **--deepseek-enrich "text"**: CLI option for general enrichment
 
 ## Quick Start
 
@@ -122,20 +137,32 @@ python main.py --web
 
 ## Configuration
 
-### Environment Variables
 
-The tool supports optional API keys for enhanced functionality:
+### Environment Variables & Security
 
-```bash
-# Have I Been Pwned API (for breach checking)
-export HIBP_API_KEY="your-hibp-api-key"
-
-# Google Custom Search API (for enhanced dorking)
-export GOOGLE_API_KEY="your-google-api-key"
-
-# Twitter Bearer Token (for social media)
-export TWITTER_BEARER_TOKEN="your-twitter-token"
+All sensitive configuration is managed via `.env` (never commit this file!). Example:
+```env
+# OSINT Reconnaissance Tool - Environment Configuration
+RATE_LIMIT=1.0
+TIMEOUT=30
+MAX_CONCURRENT=10
+GOOGLE_API_KEY=your-google-api-key
+HIBP_API_KEY=your-hibp-api-key
+LEAKLOOKUP_API_KEY=your-leaklookup-api-key
+DEEPSEEK_API_KEY=your-deepseek-api-key
+TWITTER_BEARER_TOKEN=your-twitter-token
+LINKEDIN_SESSION=your-linkedin-session
+SECRET_KEY=your-flask-secret
 ```
+**Never share or commit your `.env` file.**
+## .gitignore
+
+This project includes a `.gitignore` that excludes:
+- Python cache and build files
+- Virtual environments
+- .env and secrets
+- Output/results
+- VSCode and Jupyter files
 
 ### Rate Limiting
 
@@ -278,17 +305,21 @@ This tool is designed for legitimate security research, penetration testing, and
 - Follow local laws and regulations
 - Use findings responsibly
 
+
 ### Built-in Safeguards
 - Rate limiting to prevent service overload
 - No automated exploitation attempts
 - Read-only reconnaissance operations
 - Respectful API usage patterns
+- Sensitive files excluded from git
+
 
 ### Privacy Considerations
 - Only uses publicly available information
 - No credential harvesting or unauthorized access
 - Supports proxy configurations for anonymity
 - Logs can be disabled for sensitive operations
+- API keys and secrets are never logged
 
 ## Performance Optimization
 
