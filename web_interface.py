@@ -1,3 +1,37 @@
+
+import os
+import asyncio
+import json
+from datetime import datetime
+from typing import Dict, Any, Optional
+import threading
+import uuid
+import tempfile
+from pathlib import Path
+from flask import Flask, render_template, request, jsonify, send_file, session
+from werkzeug.utils import secure_filename
+from core.orchestrator import ReconOrchestrator
+from core.output_manager import OutputManager
+from utils.logger import setup_logger
+from utils.validators import validate_target, get_target_type
+from config import Config
+from utils.deepseek import deepseek_complete
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', 'osint-recon-web-secret-key-change-in-production')
+
+# Setup logging
+logger = setup_logger('osint_web', verbose=True)
+
+# Global storage for active reconnaissance tasks
+active_tasks = {}
+task_results = {}
+# --- NEW: Completed tasks history (for /api/history endpoint) ---
+completed_tasks_history = []
+
+
+
 # --- DeepSeek AI-powered threat scoring endpoint ---
 @app.route('/api/threat_score/<task_id>', methods=['GET'])
 def get_task_threat_score(task_id):
@@ -20,7 +54,7 @@ def get_task_threat_score(task_id):
     except Exception as e:
         logger.error(f"Failed to generate DeepSeek threat score: {e}")
         return jsonify({'error': str(e)}), 500
-from utils.deepseek import deepseek_complete
+
 # --- DeepSeek AI-powered breach report summarization endpoint ---
 @app.route('/api/summary/<task_id>', methods=['GET'])
 def get_task_summary(task_id):
@@ -41,7 +75,7 @@ def get_task_summary(task_id):
     except Exception as e:
         logger.error(f"Failed to generate DeepSeek summary: {e}")
         return jsonify({'error': str(e)}), 500
-from utils.deepseek import deepseek_complete
+
 # --- DeepSeek AI enrichment endpoint ---
 @app.route('/api/deepseek_enrich', methods=['POST'])
 def deepseek_enrich():

@@ -1,4 +1,3 @@
-
 # OSINT Reconnaissance Tool
 
 A high-performance automated OSINT (Open Source Intelligence) reconnaissance tool designed for cybersecurity professionals, threat hunters, red teamers, and bug bounty researchers. This tool automates the collection of publicly available intelligence across multiple vectors including DNS enumeration, breach checking, Google dorking, and social media reconnaissance.
@@ -95,7 +94,7 @@ Reconnaissance Modules:
   --dorks               Google dorking for intelligence gathering
   --breach              Data breach and credential exposure checking
   --social              Social media profile discovery
-  --emails              Email enumeration and validation
+  --emails              Email enumeration and validation techniques
   --all                 Run all available modules
 
 Output Options:
@@ -155,6 +154,38 @@ LINKEDIN_SESSION=your-linkedin-session
 SECRET_KEY=your-flask-secret
 ```
 **Never share or commit your `.env` file.**
+
+### Proxy Support
+
+You can route all outbound HTTP(S) requests through a proxy or a pool of rotating proxies for anonymity and to avoid rate limiting.
+
+**Single Proxy:**
+Add to your `.env`:
+```
+HTTP_PROXY=http://your-proxy:port
+HTTPS_PROXY=http://your-proxy:port
+```
+
+**Rotating Proxies:**
+Add to your `.env`:
+```
+PROXY_LIST=http://proxy1:port,http://proxy2:port,http://proxy3:port
+```
+The tool will randomly select a proxy from this list for each request (supported in Google dorking, breach, and social modules).
+
+> **Note:** For best results, use high-quality, reliable proxies. Free/public proxies may be slow or blocked by target services.
+
+**Example Usage:**
+```bash
+export HTTP_PROXY=http://myproxy:port
+python main.py --target example.com --dorks
+```
+Or for rotating proxies:
+```bash
+export PROXY_LIST=http://proxy1:port,http://proxy2:port
+python main.py --target example.com --dorks
+```
+
 ## .gitignore
 
 This project includes a `.gitignore` that excludes:

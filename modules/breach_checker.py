@@ -65,9 +65,13 @@ class BreachChecker:
         if config.hibp_api_key:
             headers['hibp-api-key'] = config.hibp_api_key
         
+        connector = aiohttp.TCPConnector(ssl=False)
+        # Use trust_env=True to pick up HTTP_PROXY/HTTPS_PROXY from env
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers=headers
+            headers=headers,
+            connector=connector,
+            trust_env=True
         )
         return self
     

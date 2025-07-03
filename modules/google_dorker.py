@@ -26,10 +26,14 @@ class GoogleDorker:
         self.results_cache = {}
     
     async def __aenter__(self):
-        """Async context manager entry."""
+        """Async context manager entry with proxy support."""
+        connector = aiohttp.TCPConnector(ssl=False)
+        # Use trust_env=True to pick up HTTP_PROXY/HTTPS_PROXY from env, or set proxy manually
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={'User-Agent': random.choice(USER_AGENTS)}
+            headers={'User-Agent': random.choice(USER_AGENTS)},
+            connector=connector,
+            trust_env=True
         )
         return self
     
@@ -107,7 +111,9 @@ class GoogleDorker:
             # Add random delay to avoid detection
             await asyncio.sleep(random.uniform(1, 3))
             
-            async with self.session.get(search_url, params=params) as response:
+            # Use proxy if set in config
+            proxy = config.http_proxy or None
+            async with self.session.get(search_url, params=params, proxy=proxy) as response:
                 if response.status == 200:
                     html = await response.text()
                     return self._parse_google_results(html, query)

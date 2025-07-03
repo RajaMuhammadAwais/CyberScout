@@ -35,14 +35,21 @@ class Config:
     web_host: str = '0.0.0.0'
     web_port: int = 5000
     debug: bool = False
-    
+
+    # Proxy support
+    http_proxy: str = None
+    https_proxy: str = None
+
     # DNS settings
     dns_servers: List[str] = None
-    
+
     # Google dorking settings
     dork_profiles: Dict[str, List[str]] = None
     
     def __post_init__(self):
+        # Load proxy settings from environment
+        self.http_proxy = os.getenv('HTTP_PROXY', '')
+        self.https_proxy = os.getenv('HTTPS_PROXY', '')
         """Initialize configuration with environment variables and defaults."""
         # Load API keys from environment
         self.google_api_key = os.getenv('GOOGLE_API_KEY', '')

@@ -52,9 +52,13 @@ class SocialScraper:
     
     async def __aenter__(self):
         """Async context manager entry."""
+        connector = aiohttp.TCPConnector(ssl=False)
+        # Use trust_env=True to pick up HTTP_PROXY/HTTPS_PROXY from env
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={'User-Agent': random.choice(USER_AGENTS)}
+            headers={'User-Agent': random.choice(USER_AGENTS)},
+            connector=connector,
+            trust_env=True
         )
         return self
     
