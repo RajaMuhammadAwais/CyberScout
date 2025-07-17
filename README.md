@@ -186,15 +186,6 @@ export PROXY_LIST=http://proxy1:port,http://proxy2:port
 python main.py --target example.com --dorks
 ```
 
-## .gitignore
-
-This project includes a `.gitignore` that excludes:
-- Python cache and build files
-- Virtual environments
-- .env and secrets
-- Output/results
-- VSCode and Jupyter files
-
 ### Rate Limiting
 
 The tool includes built-in rate limiting to respect service terms:
